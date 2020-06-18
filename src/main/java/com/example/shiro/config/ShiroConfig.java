@@ -30,6 +30,7 @@ import java.util.*;
 
 /**
  * Shiro相关配置
+ *
  * @className: ShiroConfig
  * @description
  * @author: luffy
@@ -41,27 +42,30 @@ public class ShiroConfig {
 
     /**
      * Token认证-授权
+     *
      * @return
      */
     @Bean
-    public Realm myRealm(){
-        MyRealm realm =  new MyRealm();
+    public Realm myRealm() {
+        MyRealm realm = new MyRealm();
         return realm;
     }
 
     /**
      * 普通登录认证-授权
+     *
      * @return
      */
     @Bean
-    public Realm myRealm2(){
-        MyRealm2 realm =  new MyRealm2();
+    public Realm myRealm2() {
+        MyRealm2 realm = new MyRealm2();
         realm.setCredentialsMatcher(hashedCredentialsMatcher());
         return realm;
     }
 
     /**
      * 生命周期处理器
+     *
      * @return
      */
     @Bean(name = "lifecycleBeanPostProcessor")
@@ -71,6 +75,7 @@ public class ShiroConfig {
 
     /**
      * 开启注解模式
+     *
      * @return
      */
     @Bean
@@ -83,15 +88,16 @@ public class ShiroConfig {
 
     /**
      * 权限管理
+     *
      * @param myRealm
      * @return
      */
     @Bean(value = "securityManager")
-    public SessionsSecurityManager securityManager(@Qualifier("myRealm") Realm myRealm,@Qualifier("myRealm2") Realm myRealm2) {
+    public SessionsSecurityManager securityManager(@Qualifier("myRealm") Realm myRealm, @Qualifier("myRealm2") Realm myRealm2) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         //指定多 realm  先配置Authenticator-顺序不能相反
         securityManager.setAuthenticator(modularRealmAuthenticator());
-        List<Realm> list = Arrays.asList(myRealm,myRealm2);
+        List<Realm> list = Arrays.asList(myRealm, myRealm2);
         securityManager.setRealms(list);
         securityManager.setRememberMeManager(null);
         return securityManager;
@@ -100,6 +106,7 @@ public class ShiroConfig {
 
     /**
      * 开启Shiro-aop注解支持
+     *
      * @param securityManager
      * @return
      */
@@ -112,10 +119,11 @@ public class ShiroConfig {
 
     /**
      * 加密算法
+     *
      * @return
      */
     @Bean
-    public HashedCredentialsMatcher hashedCredentialsMatcher(){
+    public HashedCredentialsMatcher hashedCredentialsMatcher() {
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
         hashedCredentialsMatcher.setHashAlgorithmName(IShiroConst.HASH_ALGORITHMNAME);//散列算法 --- 这里使用MD5算法
         hashedCredentialsMatcher.setHashIterations(IShiroConst.HASH_ITERATIONS);//散列的次数 --- md5(md5(""))
@@ -124,9 +132,9 @@ public class ShiroConfig {
 
     /**
      * Realm管理，主要针对多realm
-     * */
+     */
     @Bean
-    public ModularRealmAuthenticator modularRealmAuthenticator(){
+    public ModularRealmAuthenticator modularRealmAuthenticator() {
         //自己重写的ModularRealmAuthenticator
         MyModularRealmAuthenticator modularRealmAuthenticator = new MyModularRealmAuthenticator();
         modularRealmAuthenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
@@ -134,7 +142,7 @@ public class ShiroConfig {
     }
 
     @Bean(name = "shiroFilterFactoryBean")
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(@Qualifier("securityManager")SecurityManager securityManager) {
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(@Qualifier("securityManager") SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         Map<String, Filter> filterMap = new LinkedHashMap<>();

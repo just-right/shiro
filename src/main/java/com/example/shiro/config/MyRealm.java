@@ -45,25 +45,25 @@ public class MyRealm extends AuthorizingRealm {
      * @return
      * @throws AuthenticationException
      */
-    @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        MyAuthToken authToken = (MyAuthToken) authenticationToken;
-        String token = authToken.getToken();
-        /**
-         * 存缓存中获取token token为key,uid为value
-         */
-        if (StringUtils.isEmpty(token) || !TokenUserRedisUtils.isExistedKey(token) || StringUtils.isEmpty(TokenUserRedisUtils.getValueByKey(token))){
-            throw new IncorrectCredentialsException("token失效，请重新登录");
-        }
-        String uid = TokenUserRedisUtils.getValueByKey(token);
-        assert uid != null;
-        User user =  userService.queryById(Integer.parseInt(uid));
-        if (user == null){
-            throw new UnknownAccountException("用户不存在!");
-        }
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, token, getName());
-        return info;
+@Override
+protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+    MyAuthToken authToken = (MyAuthToken) authenticationToken;
+    String token = authToken.getToken();
+    /**
+     * 存缓存中获取token token为key,uid为value
+     */
+    if (StringUtils.isEmpty(token) || !TokenUserRedisUtils.isExistedKey(token) || StringUtils.isEmpty(TokenUserRedisUtils.getValueByKey(token))){
+        throw new IncorrectCredentialsException("token失效，请重新登录");
     }
+    String uid = TokenUserRedisUtils.getValueByKey(token);
+    assert uid != null;
+    User user =  userService.queryById(Integer.parseInt(uid));
+    if (user == null){
+        throw new UnknownAccountException("用户不存在!");
+    }
+    SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, token, getName());
+    return info;
+}
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {

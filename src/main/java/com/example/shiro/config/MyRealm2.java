@@ -67,12 +67,12 @@ public class MyRealm2 extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         MyAuthToken token = (MyAuthToken) authenticationToken;
-        User user =  userService.queryByUserName(token.getUsername());
-        if (user == null){
+        User user = userService.queryByUserName(token.getUsername());
+        if (user == null) {
             throw new UnknownAccountException("用户不存在!");
         }
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(token.getPrincipal(), user.getPassword(), getName());
-        if (user.getSalt() != null){
+        if (user.getSalt() != null) {
             info.setCredentialsSalt(ByteSource.Util.bytes(user.getSalt()));
         }
         return info;

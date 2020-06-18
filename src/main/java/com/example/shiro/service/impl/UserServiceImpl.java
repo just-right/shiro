@@ -140,11 +140,11 @@ public class UserServiceImpl implements UserService {
     public JSONObject logout(String token) {
         JSONObject result = new JSONObject();
         String uid = TokenUserRedisUtils.getValueByKey(token);
-        /**
-         * 删除Token信息
-         */
-        tokenService.delUserToken(Integer.valueOf(uid));
-        tokenService.delTokenUser(token);
+/**
+ * 删除Token信息
+ */
+tokenService.delUserToken(Integer.valueOf(uid));
+tokenService.delTokenUser(token);
         result.put("data", "logout success!");
         return result;
     }
