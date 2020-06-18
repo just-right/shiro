@@ -1,0 +1,62 @@
+@startuml
+abstract class AuthenticatingFilter
+abstract class AuthorizingRealm
+class ModularRealmAuthenticator
+class UsernamePasswordToken
+
+class MyAuthFilter{
+    #AuthenticationToken createToken(ServletRequest request, ServletResponse servletResponse)
+    #boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue)
+    #boolean onAccessDenied(ServletRequest request, ServletResponse response)
+    #boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response)
+}
+
+class MyRealm{
+ 	-RoleService roleService
+ 	-PermissionService permissionService
+ 	-UserService userService
+ 	+String getName()
+ 	#AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
+ 	#AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection)
+}
+
+class MyRealm2{
+ 	-RoleService roleService
+ 	-PermissionService permissionService
+ 	-UserService userService
+ 	+String getName()
+ 	#AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
+ 	#AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection)
+}
+
+class MyModularRealmAuthenticator{
+	#AuthenticationInfo doAuthenticate(AuthenticationToken authenticationToken)
+}
+
+class MyAuthToken{
+	-String token
+	-String loginType
+	+MyAuthToken(String username, String password, String token, String loginType)
+	+Object getCredentials()
+}
+
+
+AuthenticatingFilter <|--- MyAuthFilter
+AuthorizingRealm <|-- MyRealm
+AuthorizingRealm <|-- MyRealm2
+ModularRealmAuthenticator <|-- MyModularRealmAuthenticator
+UsernamePasswordToken <|-- MyAuthToken
+MyRealm o-- MyAuthFilter : use
+MyRealm2 o-- MyAuthFilter : use
+MyRealm o-- MyModularRealmAuthenticator : use
+MyRealm2 o-- MyModularRealmAuthenticator : use
+MyAuthToken o-- MyRealm : use
+MyAuthToken o-- MyRealm2 : use
+MyAuthToken o-- MyAuthFilter : use
+
+note left of MyRealm : Token认证、授权
+note left of MyRealm2 : 普通登录认证、授权
+note left of MyAuthToken : 自定义Token
+note left of MyAuthFilter : 自定义认证过滤器
+note left of MyModularRealmAuthenticator : 自定义多Realm管理器
+@enduml

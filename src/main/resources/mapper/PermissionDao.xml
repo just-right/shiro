@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.shiro.dao.PermissionDao">
+
+    <resultMap type="com.example.shiro.entity.Permission" id="PermissionMap">
+        <result property="pid" column="pid" jdbcType="INTEGER"/>
+        <result property="pname" column="pname" jdbcType="VARCHAR"/>
+        <result property="ptype" column="ptype" jdbcType="INTEGER"/>
+        <result property="pvalue" column="pvalue" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="PermissionMap">
+        select
+          pid, pname, ptype, pvalue
+        from mybatis.permission
+        where pid = #{pid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="PermissionMap">
+        select
+          pid, pname, ptype, pvalue
+        from mybatis.permission
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="PermissionMap">
+        select
+          pid, pname, ptype, pvalue
+        from mybatis.permission
+        <where>
+            <if test="pid != null">
+                and pid = #{pid}
+            </if>
+            <if test="pname != null and pname != ''">
+                and pname = #{pname}
+            </if>
+            <if test="ptype != null">
+                and ptype = #{ptype}
+            </if>
+            <if test="pvalue != null and pvalue != ''">
+                and pvalue = #{pvalue}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="pid" useGeneratedKeys="true">
+        insert into mybatis.permission(pname, ptype, pvalue)
+        values (#{pname}, #{ptype}, #{pvalue})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mybatis.permission
+        <set>
+            <if test="pname != null and pname != ''">
+                pname = #{pname},
+            </if>
+            <if test="ptype != null">
+                ptype = #{ptype},
+            </if>
+            <if test="pvalue != null and pvalue != ''">
+                pvalue = #{pvalue},
+            </if>
+        </set>
+        where pid = #{pid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mybatis.permission where pid = #{pid}
+    </delete>
+
+    <select id="queryByRID" resultType="com.example.shiro.entity.Permission" >
+        select
+          a.pid, a.pname, a.ptype, a.pvalue
+        from mybatis.permission a
+        left join mybatis.role_permission b on a.pid = b.pid where b.rid = #{rid}
+    </select>
+
+</mapper>

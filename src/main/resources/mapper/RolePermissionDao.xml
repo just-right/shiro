@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.shiro.dao.RolePermissionDao">
+
+    <resultMap type="com.example.shiro.entity.RolePermission" id="RolePermissionMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="rid" column="rid" jdbcType="INTEGER"/>
+        <result property="pid" column="pid" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="RolePermissionMap">
+        select
+          id, rid, pid
+        from mybatis.role_permission
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="RolePermissionMap">
+        select
+          id, rid, pid
+        from mybatis.role_permission
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="RolePermissionMap">
+        select
+          id, rid, pid
+        from mybatis.role_permission
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="rid != null">
+                and rid = #{rid}
+            </if>
+            <if test="pid != null">
+                and pid = #{pid}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into mybatis.role_permission(rid, pid)
+        values (#{rid}, #{pid})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mybatis.role_permission
+        <set>
+            <if test="rid != null">
+                rid = #{rid},
+            </if>
+            <if test="pid != null">
+                pid = #{pid},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mybatis.role_permission where id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.shiro.dao.RoleDao">
+
+    <resultMap type="com.example.shiro.entity.Role" id="RoleMap">
+        <result property="rid" column="rid" jdbcType="INTEGER"/>
+        <result property="rname" column="rname" jdbcType="VARCHAR"/>
+        <result property="rdesc" column="rdesc" jdbcType="VARCHAR"/>
+        <result property="rvalue" column="rvalue" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="RoleMap">
+        select
+          rid, rname, rdesc, rvalue
+        from mybatis.role
+        where rid = #{rid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="RoleMap">
+        select
+          rid, rname, rdesc, rvalue
+        from mybatis.role
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="RoleMap">
+        select
+        rid, rname, rdesc, rvalue
+        from mybatis.role
+        <where>
+            <if test="rid != null">
+                and rid = #{rid}
+            </if>
+            <if test="rname != null and rname != ''">
+                and rname = #{rname}
+            </if>
+            <if test="rdesc != null and rdesc != ''">
+                and rdesc = #{rdesc}
+            </if>
+            <if test="rvalue != null and rvalue != ''">
+                and rvalue = #{rvalue}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="rid" useGeneratedKeys="true">
+        insert into mybatis.role(rname, rdesc, rvalue)
+        values (#{rname}, #{rdesc}, #{rvalue})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mybatis.role
+        <set>
+            <if test="rname != null and rname != ''">
+                rname = #{rname},
+            </if>
+            <if test="rdesc != null and rdesc != ''">
+                rdesc = #{rdesc},
+            </if>
+            <if test="rvalue != null and rvalue != ''">
+                rvalue = #{rvalue},
+            </if>
+        </set>
+        where rid = #{rid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mybatis.role where rid = #{rid}
+    </delete>
+
+    <!--通过用户ID查询角色集合-->
+    <select id="queryByUID" resultType="com.example.shiro.entity.Role" >
+        select  a.rid, a.rname, a.rdesc, a.rvalue
+        from mybatis.role a left join mybatis.user_role b on a.rid = b.rid where b.uid = #{id};
+    </select>
+
+
+</mapper>

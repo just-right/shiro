@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.shiro.dao.UserRoleDao">
+
+    <resultMap type="com.example.shiro.entity.UserRole" id="UserRoleMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="uid" column="uid" jdbcType="INTEGER"/>
+        <result property="rid" column="rid" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="UserRoleMap">
+        select
+          id, uid, rid
+        from mybatis.user_role
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserRoleMap">
+        select
+          id, uid, rid
+        from mybatis.user_role
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="UserRoleMap">
+        select
+          id, uid, rid
+        from mybatis.user_role
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="uid != null">
+                and uid = #{uid}
+            </if>
+            <if test="rid != null">
+                and rid = #{rid}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into mybatis.user_role(uid, rid)
+        values (#{uid}, #{rid})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mybatis.user_role
+        <set>
+            <if test="uid != null">
+                uid = #{uid},
+            </if>
+            <if test="rid != null">
+                rid = #{rid},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mybatis.user_role where id = #{id}
+    </delete>
+
+</mapper>

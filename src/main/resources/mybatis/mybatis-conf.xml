@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <properties resource="mybatis/datasource.properties">
+        <property name="mysql-driver" value="com.mysql.cj.jdbc.Driver" />
+        <property name="mysql-url" value="jdbc:mysql://121.199.74.176:3306/mybatis"/>
+    </properties>
+
+    <settings>
+        <!--开启二级缓存-->
+        <setting name="cacheEnabled" value="true"/>
+<!--        设置日志-->
+<!--        <setting name="logImpl" value="LOG4J"/>-->
+        <!--当没有为参数指定特定的 JDBC 类型时，空值的默认 JDBC 类型-->
+        <setting name="jdbcTypeForNull" value="NULL"/>
+        <!--延迟加载 | 懒加载 配置-->
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+
+<!--    <typeAliases>-->
+<!--        &lt;!&ndash;批量设置别名，Java Bean-类名小写&ndash;&gt;-->
+<!--        <package name="entity" />-->
+<!--    </typeAliases>-->
+
+<!--    <typeHandlers>-->
+
+<!--    </typeHandlers>-->
+
+<!--    <plugins>-->
+
+<!--    </plugins>-->
+
+    <!--适配多数据源-->
+    <environments default="test">
+        <environment id="test">
+            <transactionManager type="JDBC"/><!--事务管理器，使用JDBC的提交和回滚措施-->
+            <dataSource type="POOLED"><!--数据源配置-池-->
+                <property name="driver" value="${mysql-driver}"/>
+                <property name="url" value="${mysql-url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${mysql-driver}"/>
+                <property name="url" value="${mysql-url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--数据库厂商标识-->
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="SQL Server" value="sqlserver"/>
+        <property name="DB2" value="db2"/>
+        <property name="Oracle" value="oracle" />
+        <property name="MySQL" value="mysql" />
+    </databaseIdProvider>
+
+<!--    <mappers>-->
+<!--        <mapper resource="conf/mapper.xml"></mapper>-->
+<!--        <mapper resource="conf/newMapper.xml"></mapper>-->
+
+<!--        &lt;!&ndash;<mapper url=""></mapper>&ndash;&gt;-->
+<!--        &lt;!&ndash;<mapper class="IStudentService.IStudentServiceapper>&ndash;&gt;-->
+<!--        &lt;!&ndash;批量注册，name设置包名&ndash;&gt;-->
+<!--        &lt;!&ndash;<package name=""></package>&ndash;&gt;-->
+<!--    </mappers>-->
+
+</configuration>
+
+
